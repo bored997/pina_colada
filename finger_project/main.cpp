@@ -30,7 +30,7 @@ void skinDetect(Mat * in) {
 
 int main()
 {
-    const std::string filename = "imgs/buck_family.jpg";
+    const std::string filename = "imgs/static4.png";
     cv::Mat image{ cv::imread(filename) };
     
     if (!image.data)
@@ -41,14 +41,23 @@ int main()
 
     cv::Mat hsv;
     cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+    cv::GaussianBlur(hsv, hsv, cv::Size(7, 7), 0);
+
+    cv::Mat outLow;
+    cv::Mat outHigh;
+    cv::inRange(hsv, cv::Scalar(0, 70, 0), cv::Scalar(21, 255, 255), outLow);
+    cv::inRange(hsv, cv::Scalar(160, 70, 0), cv::Scalar(180, 255, 255), outHigh);
 
     cv::Mat out;
-    cv::inRange(hsv, cv::Scalar(0, 53, 100), cv::Scalar(21, 255, 255), out);
-    
-    const std::string imageWindow{ "openCV window" };
-    cv::namedWindow(imageWindow, cv::WINDOW_AUTOSIZE); // Create a window for display.
-    cv::imshow(imageWindow, out); // Show our image inside it.
+    cv::addWeighted(outLow, 1.0, outHigh, 1.0, 0.0, out);
+    cv::dilate(out, out, 0);
+   
+    const std::string windowOne = "test one";
+    const std::string windowTwo = "test two";
+    cv::namedWindow(windowOne, cv::WINDOW_AUTOSIZE);
+    cv::imshow(windowOne, out);
+    cv::namedWindow(windowTwo, cv::WINDOW_AUTOSIZE);
 
-    cv::waitKey(0); // Wait for a keystroke in the window
+    cv::waitKey(0);
     return 0;
 }
