@@ -5,7 +5,7 @@
 
 int main()
 {
-    const std::string filename = "imgs/static2.png";
+    const std::string filename = "imgs/static1.png";
     cv::Mat image{ cv::imread(filename) };
 
     if (!image.data)
@@ -17,19 +17,9 @@ int main()
     cv::Mat hsv;
     cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV); // convert to hsv
 
-    cv::Mat lowerSkinRange;
-    cv::Mat upperSkinRange;
-    cv::inRange(hsv, cv::Scalar(15, 53, 100), cv::Scalar(20, 255, 255), lowerSkinRange);
-    cv::inRange(hsv, cv::Scalar(25, 100, 100), cv::Scalar(30, 255, 255), upperSkinRange);
-
     cv::Mat out;
 
-    cv::addWeighted(lowerSkinRange, 1.0, upperSkinRange, 1.0, 0.0, out);
-    /*
-    Naive method. Doesn't work too well since fingers are multicolored.
-    cv::GaussianBlur(proc, proc, cv::Size(25, 25), 0);
-    cv::threshold(proc, proc, 160, 255, cv::ThresholdTypes::THRESH_BINARY);
-    */
+    cv::inRange(hsv, cv::Scalar(0, 53, 100), cv::Scalar(21, 255, 255), out);
     
     const std::string imageWindow{ "openCV window" };
     cv::namedWindow(imageWindow, cv::WINDOW_AUTOSIZE); // Create a window for display.
