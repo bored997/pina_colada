@@ -14,20 +14,16 @@ int main()
         return -1;
     }
 
-    cv::Mat proc;
-    cv::cvtColor(image, proc, cv::COLOR_BGR2GRAY); // convert to gray
+    cv::Mat hsv;
+    cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV); // convert to hsv
 
-    /*
-    Naive method. Doesn't work too well since fingers are multicolored.
-    cv::GaussianBlur(proc, proc, cv::Size(25, 25), 0);
-    cv::threshold(proc, proc, 160, 255, cv::ThresholdTypes::THRESH_BINARY);
-    */
+    cv::Mat out;
 
-    cv::Canny(proc, proc, 100, 130);
+    cv::inRange(hsv, cv::Scalar(0, 53, 100), cv::Scalar(21, 255, 255), out);
     
     const std::string imageWindow{ "openCV window" };
     cv::namedWindow(imageWindow, cv::WINDOW_AUTOSIZE); // Create a window for display.
-    cv::imshow(imageWindow, proc); // Show our image inside it.
+    cv::imshow(imageWindow, out); // Show our image inside it.
 
     cv::waitKey(0); // Wait for a keystroke in the window
     return 0;
